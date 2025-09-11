@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navjivan Restaurant – Authentic Indian Cuisine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      .text-shadow {
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      }
+      .text-shadow-lg {
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+      }
+      /* Added for smoother transitions on interactive elements */
+      button, a, input[type="button"], input[type="submit"] {
+        transition: all 0.3s ease-in-out;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'coffee-brown': '#6F4E37',
+              'coffee-cream': '#F5F5DC',
+              'coffee-gold': '#D4AF37',
+              'coffee-dark': '#3a2412',
+              'coffee-light': '#fff8e1',
+            },
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+              display: ['Montserrat', 'sans-serif'],
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              blinkingCursor: {
+                '0%, 100%': { borderColor: 'transparent' },
+                '50%': { borderColor: 'white' },
+              },
+              pulseGlow: {
+                '0%, 100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(212, 175, 55, 0.7)' },
+                '50%': { transform: 'scale(1.05)', boxShadow: '0 0 10px 5px rgba(212, 175, 55, 0)' },
+              },
+              'look-around': {
+                '0%, 100%': { transform: 'translateX(-0.5px)' },
+                '50%': { transform: 'translateX(0.5px)' },
+              },
+            },
+            animation: {
+                'blinking-cursor': 'blinkingCursor 1s step-end infinite',
+                'pulse-glow': 'pulseGlow 2s infinite',
+                'look-around': 'look-around 4s ease-in-out infinite',
+            }
+          },
+        },
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.22.3",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.44.4",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.17.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-coffee-cream">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
