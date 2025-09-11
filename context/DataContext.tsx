@@ -45,6 +45,9 @@ interface DataContextType {
   updateFaqs: (faqs: FAQItem[]) => Promise<void>;
   addMenuCategory: (category: string) => Promise<void>;
   deleteMenuCategory: (category: string) => Promise<void>;
+  addChef: (chef: Omit<Chef, 'id'>) => Promise<void>;
+  updateChef: (chef: Chef) => Promise<void>;
+  deleteChef: (chef: Chef) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -302,6 +305,25 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       else setMenuCategories(prev => prev.filter(c => c !== category));
   };
 
+  const addChef = async (chef: Omit<Chef, 'id'>) => {
+    const { data, error } = await supabase.from('chefs').insert([chef]).select();
+    if (error) console.error('addChef error:', error);
+    else if (data) setChefs(prev => [...prev, data[0]].sort((a,b) => a.id - b.id));
+  };
+
+  const updateChef = async (chef: Chef) => {
+    const { data, error } = await supabase.from('chefs').update(chef).match({ id: chef.id }).select();
+    if (error) console.error('updateChef error:', error);
+    else if (data) setChefs(prev => prev.map(c => c.id === chef.id ? data[0] : c));
+  };
+
+  const deleteChef = async (chef: Chef) => {
+    await deleteImage(chef.image_url);
+    const { error } = await supabase.from('chefs').delete().match({ id: chef.id });
+    if (error) console.error('deleteChef error:', error);
+    else setChefs(prev => prev.filter(c => c.id !== chef.id));
+  };
+
   const value = {
     menuItems, contactInfo, aboutInfo, offers, faqs, reviews, galleryImages,
     chefSpecial, menuCategories, chefs, reservations, session, isDataLoaded, fetchData,
@@ -309,7 +331,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     addOffer, updateOffer, deleteOffer, addReview, updateReview, deleteReview,
     addGalleryImage, deleteGalleryImage, addReservation, updateReservation, deleteReservation,
     addContactMessage, updateContactInfo, updateAboutInfo, updateChefSpecial,
-    updateFaqs, addMenuCategory, deleteMenuCategory,
+    updateFaqs, addMenuCategory, deleteMenuCategory, addChef, updateChef, deleteChef,
   };
 
   return (
