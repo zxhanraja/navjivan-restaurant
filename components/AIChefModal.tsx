@@ -16,6 +16,7 @@ const AIChefModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpe
     const [error, setError] = useState('');
 
     const handleGetRecommendations = useCallback(async () => {
+        // FIX: Access environment variables using import.meta.env for Vite.
         const apiKey = import.meta.env.VITE_API_KEY;
 
         if (!apiKey) {
