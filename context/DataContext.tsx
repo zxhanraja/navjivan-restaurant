@@ -20,7 +20,7 @@ interface DataContextType {
   isDataLoaded: boolean;
   fetchData: () => Promise<void>;
   // Image storage functions
-  uploadImage: (file: File, bucketPath: string) => Promise<string | null>;
+  uploadImage: (file: File, bucketPath: string) => Promise<{ url: string | null; error: string | null }>;
   deleteImage: (imageUrl: string) => Promise<void>;
   // All update functions are now async and interact with the database
   addMenuItem: (item: Omit<MenuItem, 'id'>) => Promise<void>;
@@ -148,17 +148,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  const uploadImage = async (file: File, bucketPath: string): Promise<string | null> => {
+  const uploadImage = async (file: File, bucketPath: string): Promise<{ url: string | null, error: string | null }> => {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}.${fileExt}`;
     const filePath = `${bucketPath}/${fileName}`;
     const { error } = await supabase.storage.from('restaurant-assets').upload(filePath, file);
+
     if (error) {
         console.error('Error uploading image:', error);
-        return null;
+        let detailedError = `Image upload failed. Supabase error: "${error.message}"`;
+
+        if (error.message.toLowerCase().includes('jwt')) {
+            detailedError = "Image upload failed due to an Authentication Error. Please make sure your VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables are correct and you have restarted the application.";
+        } else if (error.message.toLowerCase().includes('security policy') || error.message.toLowerCase().includes('rls')) {
+             detailedError = "Image upload failed. Please check Supabase storage policies. Authenticated users need INSERT permission on the 'restaurant-assets' bucket.";
+        }
+        
+        return { url: null, error: detailedError };
     }
     const { data } = supabase.storage.from('restaurant-assets').getPublicUrl(filePath);
-    return data.publicUrl;
+    return { url: data.publicUrl, error: null };
   };
 
   const deleteImage = async (imageUrl: string) => {

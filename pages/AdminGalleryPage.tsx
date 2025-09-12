@@ -10,22 +10,26 @@ const AdminGalleryPage: React.FC = () => {
     const [altText, setAltText] = useState('');
     const [category, setCategory] = useState<'Food' | 'Ambiance'>('Food');
     const [isSaving, setIsSaving] = useState(false);
+    const [formError, setFormError] = useState('');
 
     const openModal = () => {
         setNewImageFile(null);
         setAltText('');
         setCategory('Food');
+        setFormError('');
         setIsModalOpen(true);
     };
 
     const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newImageFile || !altText) {
-            alert('Please provide an image file and alt text.');
+            setFormError('Please provide an image file and alt text.');
             return;
         }
         setIsSaving(true);
-        const imageUrl = await uploadImage(newImageFile, 'gallery-images');
+        setFormError('');
+
+        const { url: imageUrl, error } = await uploadImage(newImageFile, 'gallery-images');
 
         if (imageUrl) {
             await addGalleryImage({
@@ -35,7 +39,7 @@ const AdminGalleryPage: React.FC = () => {
             });
             setIsModalOpen(false);
         } else {
-            alert('Image upload failed. Please try again.');
+            setFormError(error || "An unknown error occurred during image upload.");
         }
         setIsSaving(false);
     };
@@ -95,6 +99,9 @@ const AdminGalleryPage: React.FC = () => {
                             <option value="Ambiance">Ambiance</option>
                         </select>
                     </div>
+
+                    {formError && <p className="text-sm text-red-600 text-center bg-red-50 p-3 rounded-md">{formError}</p>}
+                    
                     <div className="flex justify-end space-x-2 pt-4">
                         <button type="button" onClick={() => setIsModalOpen(false)} className="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancel</button>
                         <button type="submit" className="bg-coffee-brown text-white font-bold py-2 px-4 rounded-lg" disabled={isSaving}>
