@@ -6,6 +6,7 @@ import AdminLayout from './components/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Preloader from './components/Preloader';
 import ScrollToTop from './components/ScrollToTop';
+import { preloadImages } from './utils/imagePreloader';
 
 // Import all pages directly to load them upfront
 import HomePage from './pages/HomePage';
@@ -21,6 +22,7 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminReservationsPage from './pages/AdminReservationsPage';
 import AdminDishOfTheDayPage from './pages/AdminDishOfTheDayPage';
 import AdminMenuPage from './pages/AdminMenuPage';
+import AdminChefsPage from './pages/AdminChefsPage';
 import AdminOffersPage from './pages/AdminOffersPage';
 import AdminInfoPage from './pages/AdminInfoPage';
 import AdminFAQPage from './pages/AdminFAQPage';
@@ -31,7 +33,8 @@ import NotFoundPage from './pages/NotFoundPage';
 function App() {
   const [isSiteLoaded, setIsSiteLoaded] = useState(false);
   const [isPreloaderVisible, setIsPreloaderVisible] = useState(true);
-  const { isDataLoaded } = useData();
+  const [areImagesPreloaded, setAreImagesPreloaded] = useState(false);
+  const { isDataLoaded, chefSpecial, menuItems, chefs, galleryImages } = useData();
 
   useEffect(() => {
     const handleLoad = () => setIsSiteLoaded(true);
@@ -44,13 +47,35 @@ function App() {
     }
   }, []);
   
-  const isEverythingLoaded = isSiteLoaded && isDataLoaded;
+  // Preload critical images for the homepage once data is available
+  useEffect(() => {
+    if (isDataLoaded) {
+      const specialities = menuItems.filter(item => item.is_highlighted).slice(0, 2);
+      const criticalImageUrls = [
+        // Static background images from HomePage
+        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?q=80&w=1974&auto=format&fit=crop',
+        // Dynamic images from data
+        chefSpecial?.image_url,
+        ...specialities.map(item => item.image_url),
+        ...chefs.slice(0, 2).map(chef => chef.image_url),
+        ...galleryImages.slice(0, 4).map(img => img.src),
+      ].filter(Boolean) as string[];
+
+      preloadImages(criticalImageUrls).then(() => {
+        setAreImagesPreloaded(true);
+      });
+    }
+  }, [isDataLoaded, chefSpecial, menuItems, chefs, galleryImages]);
+
+  const isEverythingLoaded = isSiteLoaded && isDataLoaded && areImagesPreloaded;
 
   useEffect(() => {
     if (isEverythingLoaded) {
       const fadeTimer = setTimeout(() => {
         setIsPreloaderVisible(false);
-      }, 0); // Changed from 500 to 0 for instant transition
+      }, 0); 
       return () => clearTimeout(fadeTimer);
     }
   }, [isEverythingLoaded]);
@@ -82,6 +107,7 @@ function App() {
               <Route path="reservations" element={<AdminReservationsPage />} />
               <Route path="dish-of-the-day" element={<AdminDishOfTheDayPage />} />
               <Route path="menu" element={<AdminMenuPage />} />
+              <Route path="chefs" element={<AdminChefsPage />} />
               <Route path="offers" element={<AdminOffersPage />} />
               <Route path="reviews" element={<AdminReviewsPage />} />
               <Route path="gallery" element={<AdminGalleryPage />} />
