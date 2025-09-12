@@ -6,7 +6,7 @@ import AdminLayout from './components/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Preloader from './components/Preloader';
 import ScrollToTop from './components/ScrollToTop';
-import { preloadImages } from './utils/imagePreloader';
+import { preloadImagesWithProgress } from './utils/imagePreloader';
 
 // Import all pages directly to load them upfront
 import HomePage from './pages/HomePage';
@@ -34,7 +34,9 @@ function App() {
   const [isSiteLoaded, setIsSiteLoaded] = useState(false);
   const [isPreloaderVisible, setIsPreloaderVisible] = useState(true);
   const [areImagesPreloaded, setAreImagesPreloaded] = useState(false);
-  const { isDataLoaded, chefSpecial, menuItems, chefs, galleryImages } = useData();
+  const { isDataLoaded, chefSpecial, menuItems, chefs, galleryImages, offers } = useData();
+  const [preloadProgress, setPreloadProgress] = useState(0);
+
 
   useEffect(() => {
     const handleLoad = () => setIsSiteLoaded(true);
@@ -47,27 +49,38 @@ function App() {
     }
   }, []);
   
-  // Preload critical images for the homepage once data is available
+  // Preload all images across the site and track progress
   useEffect(() => {
     if (isDataLoaded) {
-      const specialities = menuItems.filter(item => item.is_highlighted).slice(0, 2);
-      const criticalImageUrls = [
-        // Static background images from HomePage
-        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2070&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?q=80&w=1974&auto=format&fit=crop',
-        // Dynamic images from data
+      const imageUrls = [
+        // Static background images from pages
+        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop', // HomePage Hero, ContactPage Map
+        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2070&auto=format&fit=crop', // HomePage About Snapshot
+        'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?q=80&w=1974&auto=format&fit=crop', // HomePage Reservation CTA, ContactPage Header
+        'https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2070&auto=format&fit=crop', // AboutPage Header
+        'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop', // OffersPage Header
+        // Static offers from OffersPage
+        'https://images.unsplash.com/photo-1565557623262-b9a35fcde3a4?q=80&w=2070&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=1974&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1600375836394-e038a3424164?q=80&w=1974&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1606787366850-de6330128214?q=80&w=2070&auto=format&fit=crop',
+        // Dynamic images from data context
         chefSpecial?.image_url,
-        ...specialities.map(item => item.image_url),
-        ...chefs.slice(0, 2).map(chef => chef.image_url),
-        ...galleryImages.slice(0, 4).map(img => img.src),
+        ...menuItems.map(item => item.image_url),
+        ...chefs.map(chef => chef.image_url),
+        ...galleryImages.map(img => img.src),
+        ...offers.map(offer => offer.image_url),
       ].filter(Boolean) as string[];
 
-      preloadImages(criticalImageUrls).then(() => {
+      const uniqueImageUrls = [...new Set(imageUrls)];
+
+      preloadImagesWithProgress(uniqueImageUrls, (progress) => {
+        setPreloadProgress(progress);
+      }).then(() => {
         setAreImagesPreloaded(true);
       });
     }
-  }, [isDataLoaded, chefSpecial, menuItems, chefs, galleryImages]);
+  }, [isDataLoaded, chefSpecial, menuItems, chefs, galleryImages, offers]);
 
   const isEverythingLoaded = isSiteLoaded && isDataLoaded && areImagesPreloaded;
 
@@ -75,14 +88,14 @@ function App() {
     if (isEverythingLoaded) {
       const fadeTimer = setTimeout(() => {
         setIsPreloaderVisible(false);
-      }, 0); 
+      }, 1000); // Keep preloader for 1s after 100%
       return () => clearTimeout(fadeTimer);
     }
   }, [isEverythingLoaded]);
 
   return (
     <>
-      {isPreloaderVisible && <Preloader isLoaded={isEverythingLoaded} />}
+      {isPreloaderVisible && <Preloader isLoaded={isEverythingLoaded} progress={preloadProgress} />}
       <HashRouter>
         <ScrollToTop />
         <Routes>

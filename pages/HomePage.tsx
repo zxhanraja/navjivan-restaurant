@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
   usePageTitle('Home');
   const { openReservationModal } = useOutletContext<ContextType>();
   
-  const specialities = menuItems.filter(item => item.category === "Main Course").slice(0, 2);
+  const specialities = menuItems.filter(item => item.is_highlighted).slice(0, 2);
 
   const typedText = useTypingEffect(['Authentic Indian Cuisine', 'A Taste of Tradition', 'Fresh, Flavorful, Fantastic'], 150, 75);
   const [offsetY, setOffsetY] = useState(0);
@@ -69,6 +69,11 @@ const HomePage: React.FC = () => {
     },
   ];
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = 'https://placehold.co/600x400/fff8e1/3a2412?text=Image+Not+Available';
+    e.currentTarget.onerror = null; // Prevent infinite loop
+  };
+
   return (
     <div className="bg-coffee-light">
       {/* Hero Section */}
@@ -100,7 +105,15 @@ const HomePage: React.FC = () => {
       <AnimatedSection id="special" className="py-16 bg-coffee-light">
         <div className="container mx-auto px-4">
           <div className="bg-white rounded-lg shadow-xl overflow-hidden md:grid md:grid-cols-2 md:items-center">
-            <img src={chefSpecial.image_url} alt={chefSpecial.name} className="w-full h-64 md:h-80 object-cover" loading="lazy"/>
+            <div className="w-full h-64 md:h-80 bg-coffee-light">
+                <img 
+                  src={chefSpecial.image_url} 
+                  alt={chefSpecial.name} 
+                  className="w-full h-full object-cover" 
+                  loading="lazy"
+                  onError={handleImageError}
+                />
+            </div>
             <div className="p-6 md:p-8 text-center md:text-left">
               <h2 className="text-3xl md:text-4xl font-bold font-display text-coffee-gold mb-4">Dish of the Day</h2>
               <h3 className="text-2xl md:text-3xl font-bold text-coffee-dark font-display">{chefSpecial.name} - ₹{chefSpecial.price}</h3>
@@ -140,11 +153,11 @@ const HomePage: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-x-8 gap-y-12 max-w-4xl mx-auto">
             {chefs.slice(0, 2).map((chef) => (
               <div key={chef.id} className="flex flex-col items-center text-center group">
-                <div className="relative">
+                <div className="relative w-48 h-48 rounded-full bg-coffee-light overflow-hidden shadow-lg mx-auto transform group-hover:scale-105 transition-transform duration-300">
                   <img
                     src={chef.image_url}
                     alt={chef.name}
-                    className="w-48 h-48 rounded-full object-cover shadow-lg mx-auto transform group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover"
                     loading="lazy"
                   />
                 </div>
@@ -171,8 +184,14 @@ const HomePage: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-stretch max-w-6xl mx-auto">
             {specialities.map((item) => (
               <div key={item.id} className="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
-                <div className="relative">
-                  <img src={item.image_url} alt={item.name} className="w-full h-80 object-cover" loading="lazy"/>
+                <div className="relative w-full h-80 bg-coffee-light">
+                  <img 
+                    src={item.image_url} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover" 
+                    loading="lazy"
+                    onError={handleImageError}
+                  />
                   <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent w-full p-4">
                     <h3 className="text-3xl font-bold font-display text-white">{item.name}</h3>
                   </div>
@@ -270,8 +289,8 @@ const HomePage: React.FC = () => {
             <h2 className="text-4xl font-bold font-display text-coffee-brown mb-12">Glimpse of Our Ambiance</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
                 {galleryImages.slice(0, 4).map(img => (
-                    <div key={img.id} className="group relative overflow-hidden rounded-lg shadow-lg">
-                       <img src={img.src} alt={img.alt} className="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+                    <div key={img.id} className="group relative overflow-hidden rounded-lg shadow-lg w-full h-64 bg-coffee-light">
+                       <img src={img.src} alt={img.alt} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out" loading="lazy" />
                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300"></div>
                     </div>
                 ))}
