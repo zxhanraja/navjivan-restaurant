@@ -17,6 +17,7 @@ interface DataContextType {
   chefs: Chef[];
   reservations: ReservationItem[];
   session: Session | null;
+  isSessionLoading: boolean;
   isDataLoaded: boolean;
   fetchData: () => Promise<void>;
   // Image storage functions
@@ -65,6 +66,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [chefs, setChefs] = useState<Chef[]>([]);
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
   const [session, setSession] = useState<Session | null>(null);
+  const [isSessionLoading, setIsSessionLoading] = useState(true);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const fetchData = useCallback(async () => {
@@ -125,10 +127,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    fetchData();
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setIsSessionLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -136,6 +137,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
   }, [fetchData]);
 
   const getPathFromUrl = (url: string) => {
@@ -335,7 +340,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const value = {
     menuItems, contactInfo, aboutInfo, offers, faqs, reviews, galleryImages,
-    chefSpecial, menuCategories, chefs, reservations, session, isDataLoaded, fetchData,
+    chefSpecial, menuCategories, chefs, reservations, session, isSessionLoading, isDataLoaded, fetchData,
     uploadImage, deleteImage, addMenuItem, updateMenuItem, deleteMenuItem,
     addOffer, updateOffer, deleteOffer, addReview, updateReview, deleteReview,
     addGalleryImage, deleteGalleryImage, addReservation, updateReservation, deleteReservation,
