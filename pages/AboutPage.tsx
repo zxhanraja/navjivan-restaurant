@@ -7,6 +7,13 @@ const AboutPage: React.FC = () => {
   const { aboutInfo, chefs } = useData();
   usePageTitle('About Us');
 
+  const whyChooseUsDescriptions: { [key: string]: string } = {
+    'Authentic Taste': 'Our chefs use time-honored recipes and traditional cooking methods to bring you the true, rich flavors of Indian cuisine.',
+    'Fresh Ingredients': "We believe in quality you can taste. That's why we source the freshest local produce and finest spices for every dish.",
+    'Cozy Ambiance': 'Our warm and inviting atmosphere is designed to make you feel right at home, perfect for any occasion from family dinners to quiet evenings.',
+    'Great Service': 'Our friendly and attentive staff are dedicated to providing you with an exceptional dining experience from the moment you walk in.',
+  };
+
   return (
     <div className="bg-coffee-light min-h-screen">
       <section 
@@ -52,7 +59,7 @@ const AboutPage: React.FC = () => {
             <AnimatedSection className="max-w-4xl mx-auto text-center">
                 <h2 className="text-4xl font-bold font-display text-coffee-gold mb-4">Our Culinary Philosophy</h2>
                 <p className="text-xl text-gray-300 leading-relaxed italic border-l-4 border-coffee-gold pl-6">
-                    "We believe in honoring tradition while embracing innovation. Our kitchen is a canvas where timeless recipes are painted with a modern brush, using only the freshest, locally-sourced ingredients to create a dining experience that is both authentic and surprising."
+                    "{aboutInfo.culinary_philosophy}"
                 </p>
             </AnimatedSection>
         </div>
@@ -65,7 +72,9 @@ const AboutPage: React.FC = () => {
                 <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
                     {chefs.map(chef => (
                         <div key={chef.id} className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-                            <img src={chef.image_url} alt={chef.name} className="w-40 h-40 rounded-full object-cover shadow-lg flex-shrink-0" />
+                            <div className="w-40 h-40 rounded-full shadow-lg flex-shrink-0 bg-coffee-light overflow-hidden">
+                                <img src={chef.image_url} alt={chef.name} className="w-full h-full object-cover" />
+                            </div>
                             <div>
                                 <h3 className="text-2xl font-bold text-coffee-brown font-display">{chef.name}</h3>
                                 <p className="text-md font-semibold text-coffee-gold mb-2">{chef.title}</p>
@@ -84,9 +93,11 @@ const AboutPage: React.FC = () => {
               <h2 className="text-4xl font-bold text-coffee-dark font-display mb-12 text-center">Why Choose Us?</h2>
               <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
                 {aboutInfo.why_us.map((reason, index) => (
-                  <li key={index} className="bg-white p-6 rounded-lg shadow-lg text-center flex flex-col items-center">
-                    <svg className="w-12 h-12 text-coffee-gold mb-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <h3 className="text-xl font-bold text-coffee-dark">{reason}</h3>
+                  <li key={index} className="bg-white p-8 rounded-lg shadow-lg text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-t-4 border-coffee-gold">
+                    <h3 className="text-2xl font-bold font-display text-coffee-dark mb-3">{reason}</h3>
+                    {whyChooseUsDescriptions[reason] && (
+                        <p className="text-gray-600 leading-relaxed">{whyChooseUsDescriptions[reason]}</p>
+                    )}
                   </li>
                 ))}
               </ul>
