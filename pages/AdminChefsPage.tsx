@@ -4,13 +4,15 @@ import Modal from '../components/Modal';
 import type { Chef } from '../types';
 
 const AdminChefsPage: React.FC = () => {
-    const { chefs, addChef, updateChef, deleteChef, uploadImage } = useData();
+    const { chefs, addChef, updateChef, deleteChef, uploadImage, deleteImage } = useData();
     const [editingItem, setEditingItem] = useState<Partial<Chef> | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [formError, setFormError] = useState('');
 
     const openModal = useCallback((item: Chef | null = null) => {
         setEditingItem(item || { name: '', title: '', bio: '', image_url: '' });
+        setFormError(''); // Clear error on modal open
         setIsModalOpen(true);
     }, []);
 
@@ -24,6 +26,7 @@ const AdminChefsPage: React.FC = () => {
         e.preventDefault();
         if (!editingItem) return;
         setIsSaving(true);
+        setFormError(''); // Clear previous errors
         
         let finalItem: Partial<Chef> = { ...editingItem };
         const imageFile = (e.currentTarget.elements.namedItem('image_url') as HTMLInputElement).files?.[0];
@@ -31,9 +34,13 @@ const AdminChefsPage: React.FC = () => {
         if (imageFile) {
             const { url: newImageUrl, error } = await uploadImage(imageFile, 'chef-images');
             if (newImageUrl) {
+                // If we are editing an existing item that has an old image, delete it
+                if (editingItem.id && editingItem.image_url) {
+                    await deleteImage(editingItem.image_url);
+                }
                 finalItem.image_url = newImageUrl;
             } else {
-                alert(`Image upload failed: ${error || 'Please try again.'}`);
+                setFormError(`Image upload failed: ${error || 'Please try again.'}`);
                 setIsSaving(false);
                 return;
             }
@@ -98,6 +105,9 @@ const AdminChefsPage: React.FC = () => {
                             <input name="image_url" type="file" accept="image/*" className="mt-1 block w-full" />
                             {editingItem.image_url && <img src={editingItem.image_url} alt="Current" className="w-24 h-24 mt-2 object-cover rounded-full"/>}
                         </div>
+                        
+                        {formError && <p className="text-sm text-red-600 text-center bg-red-50 p-3 rounded-md">{formError}</p>}
+                        
                         <div className="flex justify-end space-x-2 pt-4">
                            <button type="button" onClick={() => setIsModalOpen(false)} className="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancel</button>
                            <button type="submit" className="bg-coffee-brown text-white font-bold py-2 px-4 rounded-lg" disabled={isSaving}>
