@@ -54,7 +54,7 @@ const GalleryPage: React.FC = () => {
                                 onClick={() => setSelectedImage(image.src)}
                             >
                                 <img
-                                    src={getTransformedImageUrl(image.src, { width: 400 })}
+                                    src={getTransformedImageUrl(image.src, { width: 600 })}
                                     alt={image.alt}
                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
                                     loading="lazy"
@@ -73,7 +73,7 @@ const GalleryPage: React.FC = () => {
             <Modal isOpen={!!selectedImage} onClose={() => setSelectedImage(null)}>
                 {selectedImage && (
                     <div className="p-2">
-                        <img src={getTransformedImageUrl(selectedImage, { width: 1200 })} alt="Enlarged gallery view" className="w-full max-h-[85vh] object-contain rounded-lg" />
+                        <img src={getTransformedImageUrl(selectedImage, { width: 1920 })} alt="Enlarged gallery view" className="w-full max-h-[85vh] object-contain rounded-lg" />
                     </div>
                 )}
             </Modal>

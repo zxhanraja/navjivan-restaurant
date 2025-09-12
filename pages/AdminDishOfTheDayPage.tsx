@@ -77,7 +77,7 @@ const AdminDishOfTheDayPage: React.FC = () => {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
                     <input type="file" accept="image/*" onChange={handleImageChange} className="w-full p-2 border rounded-md file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-coffee-light file:text-coffee-brown hover:file:bg-coffee-gold/50" />
-                    {localChefSpecial?.image_url && <img src={getTransformedImageUrl(localChefSpecial.image_url, { width: 400 })} alt="Chef Special Preview" className="w-40 h-40 object-cover rounded-md mt-4 shadow-sm"/>}
+                    {localChefSpecial?.image_url && <img src={getTransformedImageUrl(localChefSpecial.image_url, { width: 800 })} alt="Chef Special Preview" className="w-40 h-40 object-cover rounded-md mt-4 shadow-sm"/>}
                     {formError && <p className="text-sm text-red-600 mt-2 bg-red-50 p-3 rounded-md">{formError}</p>}
                 </div>
                  <div className="pt-4">

@@ -75,7 +75,7 @@ const AdminOffersPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {offers.map(item => (
                     <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                        <img src={getTransformedImageUrl(item.image_url, { width: 400 })} alt={item.title} className="w-full h-48 object-cover"/>
+                        <img src={getTransformedImageUrl(item.image_url, { width: 800 })} alt={item.title} className="w-full h-48 object-cover"/>
                         <div className="p-4 flex flex-col flex-grow">
                             <h3 className="font-bold text-lg text-coffee-dark">{item.title}</h3>
                             <p className="text-sm text-gray-600 mt-1 flex-grow">{item.description}</p>
@@ -109,7 +109,7 @@ const AdminOffersPage: React.FC = () => {
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Image</label>
                             <input name="image_url" type="file" accept="image/*" className="mt-1 block w-full" />
-                            {editingItem.image_url && <img src={getTransformedImageUrl(editingItem.image_url, { width: 300 })} alt="Current" className="w-24 h-24 mt-2 object-cover rounded"/>}
+                            {editingItem.image_url && <img src={getTransformedImageUrl(editingItem.image_url, { width: 600 })} alt="Current" className="w-24 h-24 mt-2 object-cover rounded"/>}
                         </div>
                         
                         {formError && <p className="text-sm text-red-600 text-center bg-red-50 p-3 rounded-md">{formError}</p>}

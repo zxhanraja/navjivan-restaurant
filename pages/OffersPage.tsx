@@ -2,6 +2,7 @@ import React from 'react';
 import { useData } from '../context/DataContext';
 import AnimatedSection from '../components/AnimatedSection';
 import usePageTitle from '../hooks/usePageTitle';
+import { getTransformedImageUrl } from '../utils/imageTransformer';
 
 const OffersPage: React.FC = () => {
   const { offers } = useData();
@@ -32,7 +33,7 @@ const OffersPage: React.FC = () => {
                 {offers.map((offer) => (
                   <div key={offer.id} className="bg-white rounded-lg shadow-xl hover:shadow-2xl overflow-hidden group transform hover:-translate-y-2 transition-all duration-300 flex flex-col border-b-4 border-transparent hover:border-coffee-gold">
                     <div className="relative h-56 overflow-hidden bg-coffee-light">
-                        <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        <img src={getTransformedImageUrl(offer.image_url, { width: 1200 })} alt={offer.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                         <span className="absolute top-4 left-0 bg-coffee-gold text-coffee-dark text-xs font-bold uppercase px-3 py-1 rounded-r-full">
                           Limited Time

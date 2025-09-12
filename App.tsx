@@ -62,7 +62,7 @@ function App() {
       ].filter(Boolean) as string[];
 
       // Preload optimized versions of dynamic images for faster loading
-      const transformedDynamicUrls = dynamicImageUrls.map(url => getTransformedImageUrl(url, { width: 800 }));
+      const transformedDynamicUrls = dynamicImageUrls.map(url => getTransformedImageUrl(url, { width: 1200 }));
 
       const imageUrls = [
         // Static background images from pages

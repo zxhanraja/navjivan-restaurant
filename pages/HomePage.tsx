@@ -108,7 +108,7 @@ const HomePage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-xl overflow-hidden md:grid md:grid-cols-2 md:items-center">
             <div className="w-full h-64 md:h-80 bg-coffee-light">
                 <img 
-                  src={getTransformedImageUrl(chefSpecial.image_url, { width: 800 })} 
+                  src={getTransformedImageUrl(chefSpecial.image_url, { width: 1200 })} 
                   alt={chefSpecial.name} 
                   className="w-full h-full object-cover" 
                   loading="lazy"
@@ -156,7 +156,7 @@ const HomePage: React.FC = () => {
               <div key={chef.id} className="flex flex-col items-center text-center group">
                 <div className="relative w-48 h-48 rounded-full bg-coffee-light overflow-hidden shadow-lg mx-auto transform group-hover:scale-105 transition-transform duration-300">
                   <img
-                    src={getTransformedImageUrl(chef.image_url, { width: 400 })}
+                    src={getTransformedImageUrl(chef.image_url, { width: 600 })}
                     alt={chef.name}
                     className="w-full h-full object-cover"
                     loading="lazy"
@@ -187,7 +187,7 @@ const HomePage: React.FC = () => {
               <div key={item.id} className="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
                 <div className="relative w-full h-80 bg-coffee-light">
                   <img 
-                    src={getTransformedImageUrl(item.image_url, { width: 800 })} 
+                    src={getTransformedImageUrl(item.image_url, { width: 1200 })} 
                     alt={item.name} 
                     className="w-full h-full object-cover" 
                     loading="lazy"
@@ -291,7 +291,7 @@ const HomePage: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
                 {galleryImages.slice(0, 4).map(img => (
                     <div key={img.id} className="group relative overflow-hidden rounded-lg shadow-lg w-full h-64 bg-coffee-light">
-                       <img src={getTransformedImageUrl(img.src, { width: 400 })} alt={img.alt} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out" loading="lazy" />
+                       <img src={getTransformedImageUrl(img.src, { width: 600 })} alt={img.alt} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out" loading="lazy" />
                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300"></div>
                     </div>
                 ))}

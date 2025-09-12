@@ -26,7 +26,7 @@ export const getTransformedImageUrl = (url: string | null | undefined, options: 
     urlObj.search = '';
     
     urlObj.searchParams.set('width', String(options.width));
-    urlObj.searchParams.set('quality', String(options.quality || 90)); // High quality default
+    urlObj.searchParams.set('quality', String(options.quality || 95)); // High quality default
     urlObj.searchParams.set('format', 'auto'); // Serve WebP/AVIF when possible
     urlObj.searchParams.set('resize', 'cover');
 
