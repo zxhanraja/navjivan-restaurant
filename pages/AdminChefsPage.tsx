@@ -29,11 +29,11 @@ const AdminChefsPage: React.FC = () => {
         const imageFile = (e.currentTarget.elements.namedItem('image_url') as HTMLInputElement).files?.[0];
 
         if (imageFile) {
-            const newImageUrl = await uploadImage(imageFile, 'chef-images');
+            const { url: newImageUrl, error } = await uploadImage(imageFile, 'chef-images');
             if (newImageUrl) {
                 finalItem.image_url = newImageUrl;
             } else {
-                alert('Image upload failed. Please try again.');
+                alert(`Image upload failed: ${error || 'Please try again.'}`);
                 setIsSaving(false);
                 return;
             }
