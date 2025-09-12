@@ -40,7 +40,8 @@ const AdminChefsPage: React.FC = () => {
                 }
                 finalItem.image_url = newImageUrl;
             } else {
-                setFormError(`Image upload failed: ${error || 'Please try again.'}`);
+                const defaultError = "Please check Supabase storage policies. Authenticated users need INSERT permission on the 'restaurant-assets' bucket.";
+                setFormError(`Image upload failed. ${error || defaultError}`);
                 setIsSaving(false);
                 return;
             }
