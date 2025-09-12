@@ -9,6 +9,12 @@ const AdminInfoPage: React.FC = () => {
     const [newCategory, setNewCategory] = useState('');
     const [showSuccess, setShowSuccess] = useState(false);
 
+    // FIX: Sync local state with context state when data loads/changes
+    useEffect(() => {
+        setLocalContactInfo(contactInfo);
+        setLocalAboutInfo(aboutInfo);
+    }, [contactInfo, aboutInfo]);
+
     useEffect(() => {
         let timer: number;
         if (showSuccess) {
@@ -94,6 +100,7 @@ const AdminInfoPage: React.FC = () => {
                         <div><label className="font-semibold">Our Story</label><textarea name="story" value={localAboutInfo.story} onChange={handleAboutChange} className="w-full p-2 border rounded" rows={5}/></div>
                         <div><label className="font-semibold">Our Mission</label><textarea name="mission" value={localAboutInfo.mission} onChange={handleAboutChange} className="w-full p-2 border rounded" rows={3}/></div>
                         <div><label className="font-semibold">Our Vision</label><textarea name="vision" value={localAboutInfo.vision} onChange={handleAboutChange} className="w-full p-2 border rounded" rows={3}/></div>
+                        <div><label className="font-semibold">Our Culinary Philosophy</label><textarea name="culinary_philosophy" value={localAboutInfo.culinary_philosophy || ''} onChange={handleAboutChange} className="w-full p-2 border rounded" rows={4}/></div>
                         <div><label className="font-semibold">Why Choose Us (one reason per line)</label><textarea value={localAboutInfo.why_us.join('\n')} onChange={handleWhyUsChange} className="w-full p-2 border rounded" rows={4}/></div>
                     </div>
                      <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
