@@ -70,11 +70,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const fetchData = useCallback(async () => {
-    // Set loading to false only after the first fetch is complete.
-    // Subsequent fetches via real-time won't show a loading screen.
-    if (!isDataLoaded) {
-        setIsDataLoaded(false);
-    }
     const promises = [
         supabase.from('menu_items').select('*'),
         supabase.from('contact_info').select('*').single(),
@@ -128,7 +123,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     else if(reservationsRes.status === 'rejected') console.error("Error fetching reservations:", reservationsRes.reason);
     
     setIsDataLoaded(true);
-  }, [isDataLoaded]);
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
