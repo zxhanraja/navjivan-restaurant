@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useData } from '../context/DataContext';
 import Modal from '../components/Modal';
 import type { GalleryImage } from '../types';
+import { getTransformedImageUrl } from '../utils/imageTransformer';
 
 const AdminGalleryPage: React.FC = () => {
     const { galleryImages, addGalleryImage, deleteGalleryImage, uploadImage } = useData();
@@ -62,7 +63,7 @@ const AdminGalleryPage: React.FC = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {galleryImages.map(image => (
                     <div key={image.id} className="relative group bg-white p-2 rounded-lg shadow-md">
-                        <img src={image.src} alt={image.alt} className="w-full h-40 object-cover rounded" />
+                        <img src={getTransformedImageUrl(image.src, { width: 200 })} alt={image.alt} className="w-full h-40 object-cover rounded" />
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg">
                             <button onClick={() => handleDelete(image)} className="text-white bg-red-600/80 rounded-full p-2 hover:bg-red-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

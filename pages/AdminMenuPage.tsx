@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useData } from '../context/DataContext';
 import Modal from '../components/Modal';
 import type { MenuItem } from '../types';
+import { getTransformedImageUrl } from '../utils/imageTransformer';
 
 const AdminMenuPage: React.FC = () => {
     const { menuItems, menuCategories, addMenuItem, updateMenuItem, deleteMenuItem, uploadImage } = useData();
@@ -89,7 +90,7 @@ const AdminMenuPage: React.FC = () => {
                             <tr key={item.id} className="bg-white border-b hover:bg-gray-50 align-middle">
                                 <td className="px-6 py-4">
                                     <img 
-                                        src={item.image_url} 
+                                        src={getTransformedImageUrl(item.image_url, { width: 150 })} 
                                         alt={item.name} 
                                         className="w-16 h-16 object-cover rounded"
                                         onError={handleImageError}
@@ -117,7 +118,7 @@ const AdminMenuPage: React.FC = () => {
                 {menuItems.map(item => (
                     <div key={item.id} className="bg-white p-4 rounded-lg shadow-md">
                         <img 
-                            src={item.image_url} 
+                            src={getTransformedImageUrl(item.image_url, { width: 600 })} 
                             alt={item.name} 
                             className="w-full h-40 object-cover rounded mb-3"
                             onError={handleImageError}
@@ -165,7 +166,7 @@ const AdminMenuPage: React.FC = () => {
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Image</label>
                             <input name="image_url" type="file" accept="image/*" className="mt-1 block w-full" />
-                            {editingItem.image_url && <img src={editingItem.image_url} alt="Current" className="w-24 h-24 mt-2 object-cover rounded"/>}
+                            {editingItem.image_url && <img src={getTransformedImageUrl(editingItem.image_url, { width: 300 })} alt="Current" className="w-24 h-24 mt-2 object-cover rounded"/>}
                         </div>
                          <div>
                             <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">

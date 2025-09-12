@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Preloader from './components/Preloader';
 import ScrollToTop from './components/ScrollToTop';
 import { preloadImagesWithProgress } from './utils/imagePreloader';
+import { getTransformedImageUrl } from './utils/imageTransformer';
 
 // Import all pages directly to load them upfront
 import HomePage from './pages/HomePage';
@@ -52,6 +53,17 @@ function App() {
   // Preload all images across the site and track progress
   useEffect(() => {
     if (isDataLoaded) {
+      const dynamicImageUrls = [
+        chefSpecial?.image_url,
+        ...menuItems.map(item => item.image_url),
+        ...chefs.map(chef => chef.image_url),
+        ...galleryImages.map(img => img.src),
+        ...offers.map(offer => offer.image_url),
+      ].filter(Boolean) as string[];
+
+      // Preload optimized versions of dynamic images for faster loading
+      const transformedDynamicUrls = dynamicImageUrls.map(url => getTransformedImageUrl(url, { width: 800 }));
+
       const imageUrls = [
         // Static background images from pages
         'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop', // HomePage Hero, ContactPage Map
@@ -59,18 +71,8 @@ function App() {
         'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?q=80&w=1974&auto=format&fit=crop', // HomePage Reservation CTA, ContactPage Header
         'https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2070&auto=format&fit=crop', // AboutPage Header
         'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop', // OffersPage Header
-        // Static offers from OffersPage
-        'https://images.unsplash.com/photo-1565557623262-b9a35fcde3a4?q=80&w=2070&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=1974&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1600375836394-e038a3424164?q=80&w=1974&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1606787366850-de6330128214?q=80&w=2070&auto=format&fit=crop',
-        // Dynamic images from data context
-        chefSpecial?.image_url,
-        ...menuItems.map(item => item.image_url),
-        ...chefs.map(chef => chef.image_url),
-        ...galleryImages.map(img => img.src),
-        ...offers.map(offer => offer.image_url),
-      ].filter(Boolean) as string[];
+        ...transformedDynamicUrls,
+      ];
 
       const uniqueImageUrls = [...new Set(imageUrls)];
 

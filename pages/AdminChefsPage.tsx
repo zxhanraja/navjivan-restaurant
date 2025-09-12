@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useData } from '../context/DataContext';
 import Modal from '../components/Modal';
 import type { Chef } from '../types';
+import { getTransformedImageUrl } from '../utils/imageTransformer';
 
 const AdminChefsPage: React.FC = () => {
     const { chefs, addChef, updateChef, deleteChef, uploadImage, deleteImage } = useData();
@@ -80,7 +81,7 @@ const AdminChefsPage: React.FC = () => {
                     <tbody>
                         {chefs.map(item => (
                             <tr key={item.id} className="border-b">
-                                <td className="p-3"><img src={item.image_url} alt={item.name} className="w-16 h-16 object-cover rounded-full"/></td>
+                                <td className="p-3"><img src={getTransformedImageUrl(item.image_url, { width: 150 })} alt={item.name} className="w-16 h-16 object-cover rounded-full"/></td>
                                 <td className="p-3 font-semibold">{item.name}</td>
                                 <td className="p-3">{item.title}</td>
                                 <td className="p-3">
@@ -103,7 +104,7 @@ const AdminChefsPage: React.FC = () => {
                         <div>
                             <label className="block text-sm font-medium">Image</label>
                             <input name="image_url" type="file" accept="image/*" className="mt-1 block w-full" />
-                            {editingItem.image_url && <img src={editingItem.image_url} alt="Current" className="w-24 h-24 mt-2 object-cover rounded-full"/>}
+                            {editingItem.image_url && <img src={getTransformedImageUrl(editingItem.image_url, { width: 300 })} alt="Current" className="w-24 h-24 mt-2 object-cover rounded-full"/>}
                         </div>
                         
                         {formError && <p className="text-sm text-red-600 text-center bg-red-50 p-3 rounded-md">{formError}</p>}

@@ -3,6 +3,7 @@ import { useData } from '../context/DataContext';
 import AnimatedSection from '../components/AnimatedSection';
 import Modal from '../components/Modal';
 import usePageTitle from '../hooks/usePageTitle';
+import { getTransformedImageUrl } from '../utils/imageTransformer';
 
 type Category = 'All' | 'Food' | 'Ambiance';
 
@@ -49,13 +50,13 @@ const GalleryPage: React.FC = () => {
                         {filteredImages.map(image => (
                             <div
                                 key={image.id}
-                                className="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer"
+                                className="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer w-full h-48 sm:h-56 md:h-64 bg-coffee-light"
                                 onClick={() => setSelectedImage(image.src)}
                             >
                                 <img
-                                    src={image.src}
+                                    src={getTransformedImageUrl(image.src, { width: 400 })}
                                     alt={image.alt}
-                                    className="w-full h-48 sm:h-56 md:h-64 object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
+                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
                                     loading="lazy"
                                 />
                                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
@@ -72,7 +73,7 @@ const GalleryPage: React.FC = () => {
             <Modal isOpen={!!selectedImage} onClose={() => setSelectedImage(null)}>
                 {selectedImage && (
                     <div className="p-2">
-                        <img src={selectedImage} alt="Enlarged gallery view" className="w-full max-h-[85vh] object-contain rounded-lg" />
+                        <img src={getTransformedImageUrl(selectedImage, { width: 1200 })} alt="Enlarged gallery view" className="w-full max-h-[85vh] object-contain rounded-lg" />
                     </div>
                 )}
             </Modal>
