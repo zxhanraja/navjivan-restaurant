@@ -1,5 +1,7 @@
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 
 interface StatCardProps {
     icon: React.ReactNode;
@@ -24,9 +26,10 @@ const StatCard: React.FC<StatCardProps> = ({ icon, title, value, linkTo, linkLab
 
     if (linkTo) {
         return (
-            <Link to={linkTo} className={`${cardClasses} hover:shadow-xl`}>
+            // FIX: Changed to use namespaced import.
+            <ReactRouterDOM.Link to={linkTo} className={`${cardClasses} hover:shadow-xl`}>
                 {content}
-            </Link>
+            </ReactRouterDOM.Link>
         );
     }
 

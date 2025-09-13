@@ -1,5 +1,7 @@
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 import usePageTitle from '../hooks/usePageTitle';
 
 const NotFoundPage: React.FC = () => {
@@ -14,15 +16,16 @@ const NotFoundPage: React.FC = () => {
                  <p className="mt-4 text-lg text-gray-600">
                     Oops! The page you’re looking for doesn’t exist.
                  </p>
-                 <Link 
+                 {/* FIX: Changed to use namespaced import. */}
+                 <ReactRouterDOM.Link 
                     to="/"
                     className="mt-8 inline-block bg-coffee-brown text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-dark transition duration-300"
                  >
                     Go Back Home
-                 </Link>
+                 </ReactRouterDOM.Link>
             </div>
         </div>
     );
 };
 
-export default NotFoundPage;
+export default NotFoundPage

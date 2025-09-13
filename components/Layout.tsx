@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
-import { NavLink, Link, Outlet } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import ReservationModal from './ReservationModal';
 import AIChefModal from './AIChefModal';
@@ -34,23 +36,23 @@ const Navbar: React.FC<{ onReserveClick: () => void; isScrolled: boolean }> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex items-center justify-between h-full">
             <div className="flex-shrink-0">
-              <NavLink to="/" className="text-coffee-gold font-display text-xl font-bold flex items-center gap-2">
+              <ReactRouterDOM.NavLink to="/" className="text-coffee-gold font-display text-xl font-bold flex items-center gap-2">
                  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-8">
                     <circle cx="16" cy="16" r="16" fill="#D4AF37"/>
                     <path d="M10 22V10L22 22V10" stroke="#3A2412" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
                  </svg>
                 <span className="text-coffee-gold font-display text-xl font-bold tracking-wider hidden sm:inline">NAVJIVAN RESTAURANT</span>
-              </NavLink>
+              </ReactRouterDOM.NavLink>
             </div>
             <div className="hidden md:flex items-center space-x-4">
               {navItems.map((item) => (
-                <NavLink
+                <ReactRouterDOM.NavLink
                   key={item.name}
                   to={item.path}
                   className={({ isActive }) => `${linkClasses} ${isActive ? activeLinkClasses : ''}`}
                 >
                   {item.name}
-                </NavLink>
+                </ReactRouterDOM.NavLink>
               ))}
               <button
                 onClick={onReserveClick}
@@ -87,12 +89,12 @@ const Navbar: React.FC<{ onReserveClick: () => void; isScrolled: boolean }> = ({
         ></div>
         <div className="fixed top-0 right-0 h-full w-64 bg-coffee-dark shadow-lg p-5 z-50">
            <div className="flex items-center justify-between mb-8">
-             <NavLink to="/" onClick={() => setMobileMenuOpen(false)}>
+             <ReactRouterDOM.NavLink to="/" onClick={() => setMobileMenuOpen(false)}>
                 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-8">
                     <circle cx="16" cy="16" r="16" fill="#D4AF37"/>
                     <path d="M10 22V10L22 22V10" stroke="#3A2412" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-             </NavLink>
+             </ReactRouterDOM.NavLink>
              <button
                 onClick={() => setMobileMenuOpen(false)}
                 type="button"
@@ -106,14 +108,14 @@ const Navbar: React.FC<{ onReserveClick: () => void; isScrolled: boolean }> = ({
            </div>
             <nav className="flex flex-col space-y-2">
                 {navItems.map((item) => (
-                  <NavLink
+                  <ReactRouterDOM.NavLink
                     key={item.name}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
                     className={({ isActive }) => `block px-3 py-2 rounded-md text-base font-medium ${linkClasses} ${isActive ? activeLinkClasses : ''}`}
                   >
                     {item.name}
-                  </NavLink>
+                  </ReactRouterDOM.NavLink>
                 ))}
                 <button
                   onClick={() => {
@@ -139,7 +141,7 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
             <p className="text-gray-400 text-center sm:text-left">
-                &copy; {new Date().getFullYear()} Navjivan Restaurant. All Rights Reserved. | <Link to="/admin" className="hover:text-coffee-gold">Admin</Link>
+                &copy; {new Date().getFullYear()} Navjivan Restaurant. All Rights Reserved. | <ReactRouterDOM.Link to="/admin" className="hover:text-coffee-gold">Admin</ReactRouterDOM.Link>
             </p>
             <div className="flex space-x-4">
                 <a href={contactInfo.socials.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-coffee-gold" aria-label="Visit our Facebook page"><span className="sr-only">Facebook</span><svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" /></svg></a>
@@ -169,7 +171,7 @@ export const Layout: React.FC = () => {
     <div className="flex flex-col min-h-screen">
       <Navbar onReserveClick={() => setReservationModalOpen(true)} isScrolled={isScrolled} />
       <main className={`flex-grow ${isScrolled ? 'pt-16' : 'pt-20'} transition-all duration-300`}>
-        <Outlet context={{ openReservationModal: () => setReservationModalOpen(true) }}/>
+        <ReactRouterDOM.Outlet context={{ openReservationModal: () => setReservationModalOpen(true) }}/>
       </main>
       <Footer />
       <ReservationModal

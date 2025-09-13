@@ -1,7 +1,9 @@
 
 
+
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 import { useData } from '../context/DataContext';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -16,7 +18,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }
 
   if (!session) {
-    return <Navigate to="/admin/login" replace />;
+    // FIX: Changed to use namespaced import.
+    return <ReactRouterDOM.Navigate to="/admin/login" replace />;
   }
 
   return <>{children}</>;

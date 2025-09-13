@@ -166,7 +166,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getPathFromUrl = (url: string) => {
     try {
         const urlObj = new URL(url);
-        return urlObj.pathname.split('/restaurant-assets/')[1];
+        const pathParts = urlObj.pathname.split('/');
+        const bucketIndex = pathParts.indexOf('restaurant-assets');
+        if (bucketIndex > -1) {
+            return pathParts.slice(bucketIndex + 1).join('/');
+        }
+        return null;
     } catch (e) {
         console.error('Invalid URL for path extraction:', url, e);
         return null;
@@ -207,90 +212,90 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
     const { error } = await supabase.from('menu_items').insert([item]).select();
     if (error) console.error('addMenuItem error:', error);
-    // State will be updated by the real-time subscription, no need to manually set it.
+    else await fetchData();
   };
 
   const updateMenuItem = async (item: MenuItem) => {
     const { error } = await supabase.from('menu_items').update(item).match({ id: item.id }).select();
     if (error) console.error('updateMenuItem error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const deleteMenuItem = async (item: MenuItem) => {
     await deleteImage(item.image_url);
     const { error } = await supabase.from('menu_items').delete().match({ id: item.id });
     if (error) console.error('deleteMenuItem error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
   
   const addOffer = async (offer: Omit<OfferItem, 'id'>) => {
     const { error } = await supabase.from('offers').insert([offer]).select();
     if(error) console.error('addOffer error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const updateOffer = async (offer: OfferItem) => {
     const { error } = await supabase.from('offers').update(offer).match({ id: offer.id }).select();
     if(error) console.error('updateOffer error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const deleteOffer = async (offer: OfferItem) => {
     await deleteImage(offer.image_url);
     const { error } = await supabase.from('offers').delete().match({ id: offer.id });
     if(error) console.error('deleteOffer error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
   
   const addReview = async (review: Omit<ReviewItem, 'id'>): Promise<boolean> => {
     const { error } = await supabase.from('reviews').insert([review]);
     if(error) { console.error('addReview error:', error); return false; }
-    // No fetchData call needed, subscription will handle it.
+    await fetchData();
     return true;
   };
 
   const updateReview = async (review: ReviewItem) => {
     const { error } = await supabase.from('reviews').update(review).match({ id: review.id }).select();
     if(error) console.error('updateReview error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const deleteReview = async (id: number) => {
     const { error } = await supabase.from('reviews').delete().match({ id });
     if(error) console.error('deleteReview error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
   
   const addGalleryImage = async (image: Omit<GalleryImage, 'id'>) => {
     const { error } = await supabase.from('gallery_images').insert([image]).select();
     if(error) console.error('addGalleryImage error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const deleteGalleryImage = async (image: GalleryImage) => {
     await deleteImage(image.src);
     const { error } = await supabase.from('gallery_images').delete().match({ id: image.id });
     if(error) console.error('deleteGalleryImage error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const addReservation = async (reservation: Omit<ReservationItem, 'id' | 'created_at' | 'status'>): Promise<boolean> => {
     const { error } = await supabase.from('reservations').insert([{ ...reservation, status: 'Pending' }]);
     if (error) { console.error('addReservation error:', error); return false; }
-    // No fetchData call needed, subscription will handle it.
+    await fetchData();
     return true;
   };
 
   const updateReservation = async (reservation: ReservationItem) => {
       const { error } = await supabase.from('reservations').update(reservation).match({ id: reservation.id }).select();
       if (error) console.error('updateReservation error:', error);
-      // State will be updated by the real-time subscription
+      else await fetchData();
   };
 
   const deleteReservation = async (id: number) => {
       const { error } = await supabase.from('reservations').delete().match({ id });
       if (error) console.error('deleteReservation error:', error);
-      // State will be updated by the real-time subscription
+      else await fetchData();
   };
   
   const addContactMessage = async (message: Omit<ContactMessageItem, 'id' | 'created_at'>): Promise<boolean> => {
@@ -302,19 +307,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateContactInfo = async (info: ContactInfo) => {
     const { error } = await supabase.from('contact_info').update(info).eq('id', 1).select();
     if (error) console.error('updateContactInfo error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
   
   const updateAboutInfo = async (info: AboutInfo) => {
     const { error } = await supabase.from('about_info').update(info).eq('id', 1).select();
     if (error) console.error('updateAboutInfo error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
   
   const updateChefSpecial = async (special: ChefSpecial) => {
     const { error } = await supabase.from('chef_special').update(special).eq('id', 1).select();
     if (error) console.error('updateChefSpecial error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const updateFaqs = async (faqsToUpdate: FAQItem[]) => {
@@ -322,38 +327,38 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (deleteError) { console.error('updateFaqs delete error:', deleteError); return; }
     const { error: insertError } = await supabase.from('faqs').insert(faqsToUpdate.map(({id, ...rest}) => rest)).select();
     if (insertError) console.error('updateFaqs insert error:', insertError);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
   
   const addMenuCategory = async (category: string) => {
       const { error } = await supabase.from('menu_categories').insert({ name: category }).select();
       if(error) console.error('addMenuCategory error:', error);
-      // State will be updated by the real-time subscription
+      else await fetchData();
   };
 
   const deleteMenuCategory = async (category: string) => {
       const { error } = await supabase.from('menu_categories').delete().match({ name: category });
       if(error) console.error('deleteMenuCategory error:', error);
-      // State will be updated by the real-time subscription
+      else await fetchData();
   };
 
   const addChef = async (chef: Omit<Chef, 'id'>) => {
     const { error } = await supabase.from('chefs').insert([chef]).select();
     if (error) console.error('addChef error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const updateChef = async (chef: Chef) => {
     const { error } = await supabase.from('chefs').update(chef).match({ id: chef.id }).select();
     if (error) console.error('updateChef error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const deleteChef = async (chef: Chef) => {
     await deleteImage(chef.image_url);
     const { error } = await supabase.from('chefs').delete().match({ id: chef.id });
     if (error) console.error('deleteChef error:', error);
-    // State will be updated by the real-time subscription
+    else await fetchData();
   };
 
   const value = {

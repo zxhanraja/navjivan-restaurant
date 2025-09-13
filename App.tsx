@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 import { useData } from './context/DataContext';
 import { Layout } from './components/Layout';
 import AdminLayout from './components/AdminLayout';
@@ -98,39 +100,64 @@ function App() {
   return (
     <>
       {isPreloaderVisible && <Preloader isLoaded={isEverythingLoaded} progress={preloadProgress} />}
-      <HashRouter>
+      {/* FIX: Changed to use namespaced import. */}
+      <ReactRouterDOM.HashRouter>
         <ScrollToTop />
-        <Routes>
+        {/* FIX: Changed to use namespaced import. */}
+        <ReactRouterDOM.Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="menu" element={<MenuPage />} />
-            <Route path="gallery" element={<GalleryPage />} />
-            <Route path="offers" element={<OffersPage />} />
-            <Route path="reviews" element={<ReviewsPage />} />
-            <Route path="about" element={<AboutPage />} />
-            <Route path="contact" element={<ContactPage />} />
-            <Route path="faq" element={<FAQPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
+          {/* FIX: Changed to use namespaced import. */}
+          <ReactRouterDOM.Route path="/" element={<Layout />}>
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route index element={<HomePage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="menu" element={<MenuPage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="gallery" element={<GalleryPage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="offers" element={<OffersPage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="reviews" element={<ReviewsPage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="about" element={<AboutPage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="contact" element={<ContactPage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="faq" element={<FAQPage />} />
+            {/* FIX: Changed to use namespaced import. */}
+            <ReactRouterDOM.Route path="*" element={<NotFoundPage />} />
+          </ReactRouterDOM.Route>
           
           {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-              <Route index element={<Navigate to="/admin/dashboard" replace />} />
-              <Route path="dashboard" element={<AdminDashboardPage />} />
-              <Route path="reservations" element={<AdminReservationsPage />} />
-              <Route path="dish-of-the-day" element={<AdminDishOfTheDayPage />} />
-              <Route path="menu" element={<AdminMenuPage />} />
-              <Route path="chefs" element={<AdminChefsPage />} />
-              <Route path="offers" element={<AdminOffersPage />} />
-              <Route path="reviews" element={<AdminReviewsPage />} />
-              <Route path="gallery" element={<AdminGalleryPage />} />
-              <Route path="info" element={<AdminInfoPage />} />
-              <Route path="faq" element={<AdminFAQPage />} />
-          </Route>
-        </Routes>
-      </HashRouter>
+          {/* FIX: Changed to use namespaced import. */}
+          <ReactRouterDOM.Route path="/admin/login" element={<AdminLoginPage />} />
+          {/* FIX: Changed to use namespaced import. */}
+          <ReactRouterDOM.Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route index element={<ReactRouterDOM.Navigate to="/admin/dashboard" replace />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="dashboard" element={<AdminDashboardPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="reservations" element={<AdminReservationsPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="dish-of-the-day" element={<AdminDishOfTheDayPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="menu" element={<AdminMenuPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="chefs" element={<AdminChefsPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="offers" element={<AdminOffersPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="reviews" element={<AdminReviewsPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="gallery" element={<AdminGalleryPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="info" element={<AdminInfoPage />} />
+              {/* FIX: Changed to use namespaced import. */}
+              <ReactRouterDOM.Route path="faq" element={<AdminFAQPage />} />
+          </ReactRouterDOM.Route>
+        </ReactRouterDOM.Routes>
+      </ReactRouterDOM.HashRouter>
     </>
   );
 }

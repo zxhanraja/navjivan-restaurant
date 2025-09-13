@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { supabase } from '../lib/supabaseClient';
 
@@ -9,7 +11,8 @@ const AdminLoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { session, isSessionLoading } = useData();
-  const navigate = useNavigate();
+  // FIX: Changed to use namespaced import.
+  const navigate = ReactRouterDOM.useNavigate();
 
   useEffect(() => {
     if (!isSessionLoading && session) {
@@ -71,9 +74,10 @@ const AdminLoginPage: React.FC = () => {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-coffee-brown hover:underline">
+          {/* FIX: Changed to use namespaced import. */}
+          <ReactRouterDOM.Link to="/" className="text-sm text-coffee-brown hover:underline">
             ← Back to Main Site
-          </Link>
+          </ReactRouterDOM.Link>
         </div>
       </div>
     </div>

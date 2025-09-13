@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
-import { Link, useOutletContext } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import useTypingEffect from '../hooks/useTypingEffect';
 import AnimatedSection from '../components/AnimatedSection';
@@ -12,9 +14,12 @@ type ContextType = { openReservationModal: () => void };
 const HomePage: React.FC = () => {
   const { menuItems, chefSpecial, reviews, galleryImages, aboutInfo, chefs } = useData();
   usePageTitle('Home');
-  const { openReservationModal } = useOutletContext<ContextType>();
+  // FIX: Changed to use namespaced import.
+  const { openReservationModal } = ReactRouterDOM.useOutletContext<ContextType>();
   
   const specialities = menuItems.filter(item => item.is_highlighted).slice(0, 2);
+  // If no specialities are set, fall back to the first 2 items on the menu.
+  const culinaryHighlights = specialities.length > 0 ? specialities : menuItems.slice(0, 2);
 
   const typedText = useTypingEffect(['Authentic Indian Cuisine', 'A Taste of Tradition', 'Fresh, Flavorful, Fantastic'], 150, 75);
   const [offsetY, setOffsetY] = useState(0);
@@ -94,7 +99,7 @@ const HomePage: React.FC = () => {
              <span className="border-r-2 border-white pr-1 animate-blinking-cursor">{typedText}</span>
           </p>
           <div className="mt-8 flex flex-wrap justify-center items-center gap-4">
-            <Link to="/menu" className="bg-coffee-gold text-coffee-dark font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-105">Explore Our Menu</Link>
+            <ReactRouterDOM.Link to="/menu" className="bg-coffee-gold text-coffee-dark font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-105">Explore Our Menu</ReactRouterDOM.Link>
             <button onClick={openReservationModal} className="bg-transparent border-2 border-coffee-gold text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-gold hover:text-coffee-dark transition duration-300 transform hover:scale-105">
               Reserve a Table
             </button>
@@ -119,9 +124,9 @@ const HomePage: React.FC = () => {
               <h2 className="text-3xl md:text-4xl font-bold font-display text-coffee-gold mb-4">Dish of the Day</h2>
               <h3 className="text-2xl md:text-3xl font-bold text-coffee-dark font-display">{chefSpecial.name} - ₹{chefSpecial.price}</h3>
               <p className="text-md text-gray-600 mt-4">{chefSpecial.description}</p>
-              <Link to="/menu" className="mt-6 inline-block bg-coffee-gold text-coffee-dark font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-105">
+              <ReactRouterDOM.Link to="/menu" className="mt-6 inline-block bg-coffee-gold text-coffee-dark font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-105">
                 See Menu
-              </Link>
+              </ReactRouterDOM.Link>
             </div>
           </div>
         </div>
@@ -152,28 +157,34 @@ const HomePage: React.FC = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold font-display text-coffee-brown mb-12">Meet Our Culinary Artists</h2>
           <div className="grid md:grid-cols-2 gap-x-8 gap-y-12 max-w-4xl mx-auto">
-            {chefs.slice(0, 2).map((chef) => (
-              <div key={chef.id} className="flex flex-col items-center text-center group">
-                <div className="relative w-48 h-48 rounded-full bg-coffee-light overflow-hidden shadow-lg mx-auto transform group-hover:scale-105 transition-transform duration-300">
-                  <img
-                    src={getTransformedImageUrl(chef.image_url, { width: 600 })}
-                    alt={chef.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+            {chefs.length > 0 ? (
+              chefs.slice(0, 2).map((chef) => (
+                <div key={chef.id} className="flex flex-col items-center text-center group">
+                  <div className="relative w-48 h-48 rounded-full bg-coffee-light overflow-hidden shadow-lg mx-auto transform group-hover:scale-105 transition-transform duration-300">
+                    <img
+                      src={getTransformedImageUrl(chef.image_url, { width: 600 })}
+                      alt={chef.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="mt-6">
+                    <h3 className="text-2xl font-bold text-coffee-dark font-display">{chef.name}</h3>
+                    <p className="text-md font-semibold text-coffee-gold mb-2">{chef.title}</p>
+                    <p className="text-gray-600 max-w-xs mx-auto text-sm">{chef.bio.substring(0, 120)}...</p>
+                  </div>
                 </div>
-                <div className="mt-6">
-                  <h3 className="text-2xl font-bold text-coffee-dark font-display">{chef.name}</h3>
-                  <p className="text-md font-semibold text-coffee-gold mb-2">{chef.title}</p>
-                  <p className="text-gray-600 max-w-xs mx-auto text-sm">{chef.bio.substring(0, 120)}...</p>
-                </div>
+              ))
+            ) : (
+              <div className="md:col-span-2 text-center text-gray-600 bg-white/50 p-8 rounded-lg">
+                <p className="text-lg">Our talented chefs are working their magic in the kitchen. Full profiles coming soon!</p>
               </div>
-            ))}
+            )}
           </div>
           <div className="mt-12">
-            <Link to="/about" className="bg-coffee-brown text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-dark transition duration-300">
+            <ReactRouterDOM.Link to="/about" className="bg-coffee-brown text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-dark transition duration-300">
               More About Our Team
-            </Link>
+            </ReactRouterDOM.Link>
           </div>
         </div>
       </AnimatedSection>
@@ -183,31 +194,40 @@ const HomePage: React.FC = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold font-display text-coffee-brown mb-12">Our Culinary Highlights</h2>
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-stretch max-w-6xl mx-auto">
-            {specialities.map((item) => (
-              <div key={item.id} className="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
-                <div className="relative w-full h-80 bg-coffee-light">
-                  <img 
-                    src={getTransformedImageUrl(item.image_url, { width: 1200 })} 
-                    alt={item.name} 
-                    className="w-full h-full object-cover" 
-                    loading="lazy"
-                    onError={handleImageError}
-                  />
-                  <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent w-full p-4">
-                    <h3 className="text-3xl font-bold font-display text-white">{item.name}</h3>
+            {culinaryHighlights.length > 0 ? (
+                culinaryHighlights.map((item) => (
+                  <div key={item.id} className="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                    <div className="relative w-full h-80 bg-coffee-light">
+                      <img 
+                        src={getTransformedImageUrl(item.image_url, { width: 1200 })} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover" 
+                        loading="lazy"
+                        onError={handleImageError}
+                      />
+                      <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent w-full p-4">
+                        <h3 className="text-3xl font-bold font-display text-white">{item.name}</h3>
+                      </div>
+                    </div>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <p className="text-gray-600 mt-2 text-md flex-grow">{item.description}</p>
+                      <div className="mt-4 flex justify-between items-center">
+                        <p className="text-2xl font-bold text-coffee-brown">₹{item.price}</p>
+                        <ReactRouterDOM.Link to="/menu" className="bg-coffee-gold text-coffee-dark font-semibold py-2 px-5 rounded-lg hover:bg-amber-500 transition duration-300">
+                            View Menu
+                        </ReactRouterDOM.Link>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <p className="text-gray-600 mt-2 text-md flex-grow">{item.description}</p>
-                  <div className="mt-4 flex justify-between items-center">
-                    <p className="text-2xl font-bold text-coffee-brown">₹{item.price}</p>
-                    <Link to="/menu" className="bg-coffee-gold text-coffee-dark font-semibold py-2 px-5 rounded-lg hover:bg-amber-500 transition duration-300">
-                        View Menu
-                    </Link>
-                  </div>
-                </div>
+                ))
+            ) : (
+              <div className="lg:col-span-2 text-center text-gray-600 bg-gray-50 p-8 rounded-lg">
+                <p className="text-lg">Our menu is currently being updated with exciting new dishes. Please check back soon!</p>
+                <ReactRouterDOM.Link to="/menu" className="mt-4 inline-block bg-coffee-gold text-coffee-dark font-bold py-2 px-6 rounded-lg hover:bg-amber-500 transition duration-300">
+                  Explore Full Menu
+                </ReactRouterDOM.Link>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </AnimatedSection>
@@ -226,9 +246,9 @@ const HomePage: React.FC = () => {
             <p className="text-lg text-gray-200 mt-4 max-w-3xl mx-auto">
               {aboutInfo.story.substring(0, 150)}...
             </p>
-            <Link to="/about" className="mt-8 inline-block bg-coffee-gold text-coffee-dark font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-105">
+            <ReactRouterDOM.Link to="/about" className="mt-8 inline-block bg-coffee-gold text-coffee-dark font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-105">
               Read Our Story
-            </Link>
+            </ReactRouterDOM.Link>
           </div>
         </div>
       </AnimatedSection>
@@ -255,9 +275,9 @@ const HomePage: React.FC = () => {
                   <p className="text-gray-600">No reviews yet. Be the first to share your experience!</p>
               )}
               <div className="mt-12">
-                  <Link to="/reviews" className="bg-coffee-brown text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-dark transition duration-300">
+                  <ReactRouterDOM.Link to="/reviews" className="bg-coffee-brown text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-dark transition duration-300">
                       Read More Reviews
-                  </Link>
+                  </ReactRouterDOM.Link>
               </div>
           </div>
       </AnimatedSection>
@@ -297,9 +317,9 @@ const HomePage: React.FC = () => {
                 ))}
             </div>
              <div className="mt-12">
-                <Link to="/gallery" className="bg-coffee-brown text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-dark transition duration-300">
+                <ReactRouterDOM.Link to="/gallery" className="bg-coffee-brown text-white font-bold py-3 px-8 rounded-lg hover:bg-coffee-dark transition duration-300">
                     Explore Gallery
-                </Link>
+                </ReactRouterDOM.Link>
             </div>
         </div>
       </AnimatedSection>

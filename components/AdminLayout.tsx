@@ -1,10 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate, Link, Outlet } from 'react-router-dom';
+// FIX: Changed import to wildcard to bypass potential module resolution issues for react-router-dom.
+import * as ReactRouterDOM from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useData } from '../context/DataContext';
 
 const AdminLayout: React.FC = () => {
-  const navigate = useNavigate();
+  // FIX: Changed to use namespaced import.
+  const navigate = ReactRouterDOM.useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { fetchData } = useData();
 
@@ -82,14 +85,14 @@ const AdminLayout: React.FC = () => {
       </div>
       <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
         {navItems.map(item => (
-            <NavLink key={item.to} to={item.to} onClick={onClose} className={({isActive}) => `${linkClasses} ${isActive ? activeLinkClasses : ''}`}>
+            <ReactRouterDOM.NavLink key={item.to} to={item.to} onClick={onClose} className={({isActive}) => `${linkClasses} ${isActive ? activeLinkClasses : ''}`}>
                 {item.icon}
                 <span>{item.text}</span>
-            </NavLink>
+            </ReactRouterDOM.NavLink>
         ))}
       </nav>
       <div className="p-4 border-t border-coffee-gold/20 flex-shrink-0">
-        <Link 
+        <ReactRouterDOM.Link 
           to="/" 
           target="_blank"
           rel="noopener noreferrer"
@@ -97,7 +100,7 @@ const AdminLayout: React.FC = () => {
         >
           View Main Site
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-        </Link>
+        </ReactRouterDOM.Link>
         <button
           onClick={handleLogout}
           className="w-full bg-red-700 text-white py-2 px-4 rounded-lg hover:bg-red-800 transition duration-200 flex items-center justify-center gap-2"
@@ -139,7 +142,7 @@ const AdminLayout: React.FC = () => {
         </header>
 
         <main className="flex-1 p-6 md:p-10 overflow-y-auto">
-          <Outlet />
+          <ReactRouterDOM.Outlet />
         </main>
       </div>
     </div>
